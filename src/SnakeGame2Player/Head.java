@@ -175,6 +175,34 @@ public class Head extends GameObject {
         invulnerable = false;
     }
     
+    public void changeDirection() {
+        switch (heading) {
+            case NORTH:
+                velX = 0;
+                velY = -vel;
+                break;
+            case SOUTH:
+                velX = 0;
+                velY = vel;
+                break;
+            case WEST:
+                velX = -vel;
+                velY = 0;
+                break;
+            case EAST:
+                velX = vel;
+                velY = 0;
+                break;
+            default:
+                System.out.println("Error: invalid heading");
+        }
+    }
+    
+    public void changeDirection(Heading heading) {
+        this.heading = heading;
+        changeDirection();
+    }
+    
     public void setHeading(Heading heading) {
         this.heading = heading;
     }

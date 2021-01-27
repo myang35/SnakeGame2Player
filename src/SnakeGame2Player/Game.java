@@ -20,8 +20,7 @@ public class Game extends Canvas implements Runnable {
     private boolean running = false;
     private int numTicks;
     public static int ticksAfterDeath;
-    public static boolean blueWin, redWin, tie;
-    public static boolean playing = false;
+    public static GameState gameState = GameState.IDLE;
 
     private Random r = new Random();
     private Handler handler;
@@ -162,12 +161,11 @@ public class Game extends Canvas implements Runnable {
             g.setFont(new Font("ARIEL", 0, 25));
             g.drawString(""+timer, WIDTH - 125, 25);
         }
-
+        
         // if only red player dies
-        if (playerBlue.getVelocity() != 0 && playerRed.getVelocity() == 0) {
-            blueWin = true;
+        if (playerBlue.isAlive() && !playerRed.isAlive() || gameState == GameState.BLUEWIN) {
+            gameState = GameState.BLUEWIN;
             
-            // if bluePoints > redPoints, blue wins
             if (ticksAfterDeath > 50) {
                 g.setFont(new Font("ARIEL", 0, 50));
                 g.setColor(Color.BLUE);
@@ -180,10 +178,9 @@ public class Game extends Canvas implements Runnable {
         }
 
         // if only blue player dies
-        if (playerBlue.getVelocity() == 0 && playerRed.getVelocity() != 0) {
-            redWin = true;
+        if (!playerBlue.isAlive() && playerRed.isAlive() || gameState == GameState.REDWIN) {
+            gameState = GameState.REDWIN;
             
-            // if bluePoints < redPoints, red wins
             if (ticksAfterDeath > 50) {
                 g.setFont(new Font("ARIEL", 0, 50));
                 g.setColor(Color.RED);
@@ -196,33 +193,14 @@ public class Game extends Canvas implements Runnable {
         }
 
         // if both players die
-        if (playerBlue.getVelocity() == 0 && playerRed.getVelocity() == 0) {
-            if (ticksAfterDeath <= 50 || tie) {
-                tie = true;
+        if (!playerBlue.isAlive() && !playerRed.isAlive()) {
+            if (ticksAfterDeath <= 50 || gameState == GameState.TIE) {
+                gameState = GameState.TIE;
                 g.setFont(new Font("ARIEL", 0, 50));
                 g.setColor(Color.WHITE);
                 g.drawString("TIED!", WIDTH / 2 - 60, HEIGHT / 2 - 30);
                 g.setFont(new Font("ARIEL", 0, 25));
                 g.drawString("Press p to play again", WIDTH / 2 - 115, HEIGHT / 2 + 30);
-            
-            // display if blue wins
-            } else if (blueWin == true) {
-                g.setFont(new Font("ARIEL", 0, 50));
-                g.setColor(Color.BLUE);
-                g.drawString("Blue player wins!", WIDTH / 2 - 190, HEIGHT / 2 - 30);
-                g.setFont(new Font("ARIEL", 0, 25));
-                g.setColor(Color.WHITE);
-                g.drawString("Press p to play again", WIDTH / 2 - 115, HEIGHT / 2 + 30);
-
-            // display if red wins
-            } else if (redWin == true) {
-                g.setFont(new Font("ARIEL", 0, 50));
-                g.setColor(Color.RED);
-                g.drawString("Red player wins!", WIDTH / 2 - 190, HEIGHT / 2 - 30);
-                g.setFont(new Font("ARIEL", 0, 25));
-                g.setColor(Color.WHITE);
-                g.drawString("Press p to play again", WIDTH / 2 - 115, HEIGHT / 2 + 30);
-
             }
         }
 
@@ -233,7 +211,7 @@ public class Game extends Canvas implements Runnable {
     }
     
     private void createPowerUp() {
-        if (!playing) {
+        if (gameState != GameState.PLAYING) {
             numTicks = 0;
         } else {
             if (numTicks == 300) {
