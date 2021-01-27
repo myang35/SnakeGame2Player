@@ -53,13 +53,7 @@ public class Food extends GameObject {
             
             GameObject tempObject = handler.object.get(i);
             
-            if (tempObject.getId() == ID.Head) {
-                if (getBounds().intersects(tempObject.getBounds())) {
-                    x = r.nextInt(Game.WIDTH-22);
-                    y = r.nextInt(Game.HEIGHT-54);
-                }
-            }
-            if (tempObject.getId() == ID.Body) {
+            if (tempObject.getId() == ID.Head || tempObject.getId() == ID.Body) {
                 if (getBounds().intersects(tempObject.getBounds())) {
                     x = r.nextInt(Game.WIDTH-22);
                     y = r.nextInt(Game.HEIGHT-54);

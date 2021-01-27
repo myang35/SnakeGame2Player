@@ -14,8 +14,6 @@ import java.util.Random;
  */
 public class Game extends Canvas implements Runnable {
 
-    private static final long serialVersionUID = 1550691097823471818L;
-
     public static final int WIDTH = 640, HEIGHT = WIDTH;
 
     private Thread thread;
@@ -26,7 +24,6 @@ public class Game extends Canvas implements Runnable {
     public static boolean playing = false;
 
     private Random r = new Random();
-    private int gameOverDisplay = 0;
     private Handler handler;
     public static Head playerBlue;
     public static Head playerRed;
@@ -87,7 +84,7 @@ public class Game extends Canvas implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                //System.out.println("FPS: " + frames);
+                System.out.println("FPS: " + frames);
                 frames = 0;
             }
         }
