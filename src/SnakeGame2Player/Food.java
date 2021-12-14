@@ -17,34 +17,32 @@ import java.util.Random;
 public class Food extends GameObject {
     
     private Handler handler;
-    private Random r = new Random();
+    private Random r;
+    
+    private int size;
     
     private double tempVelX, tempVelY;
 
     public Food(int x, int y, Handler handler) {
         super(x, y, ID.Food);
         
+        r = new Random();
         this.handler = handler;
+        this.size = 16;
+    }
+    
+    public Food(Handler handler) {
+        this(0, 0, handler);
         
+        this.x = r.nextInt(Game.WIDTH - this.size - 16);
+        this.y = r.nextInt(Game.HEIGHT - this.size - 39);
     }
     
     public Rectangle getBounds() {
-        return new Rectangle(x, y, 16, 16);
+        return new Rectangle(x, y, size, size);
     }
 
     public void tick() {
-        x += velX;
-        y += velY;
-        
-        if(x < 0 || x > Game.WIDTH - 70) {
-            velX *= -1;
-            tempVelX *= -1;
-        }
-        if(y < 0 || y > Game.HEIGHT - 100) {
-            velY *= -1;
-            tempVelY *= -1;
-        }
-        
         collision();
     }
     
@@ -55,8 +53,8 @@ public class Food extends GameObject {
             
             if (tempObject.getId() == ID.Head || tempObject.getId() == ID.Body) {
                 if (getBounds().intersects(tempObject.getBounds())) {
-                    x = r.nextInt(Game.WIDTH-22);
-                    y = r.nextInt(Game.HEIGHT-54);
+                    x = r.nextInt(Game.WIDTH - this.size - 16);
+                    y = r.nextInt(Game.HEIGHT - this.size - 39);
                 }
             }
             
@@ -65,7 +63,7 @@ public class Food extends GameObject {
     
     public void render(Graphics g) {
         g.setColor(Color.WHITE);
-        g.fillOval(x, y, 16, 16);
+        g.fillOval(x, y, size, size);
     }
     
 }

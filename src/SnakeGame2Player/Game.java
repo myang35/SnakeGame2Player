@@ -37,7 +37,7 @@ public class Game extends Canvas implements Runnable {
         playerRed = new Head(WIDTH - 50, HEIGHT / 2, Player.RED, handler);
         handler.addObject(playerRed);
 
-        food = new Food(r.nextInt(WIDTH - 22), r.nextInt(HEIGHT - 54), handler);
+        food = new Food(handler);
         handler.addObject(food);
 
         this.addKeyListener(new KeyInput(handler));

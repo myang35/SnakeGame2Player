@@ -18,6 +18,7 @@ public class Head extends GameObject {
     private Random r = new Random();
     private Handler handler;
     private Heading heading;
+    private int size;
     private int vel;
     private Player player;
     private LinkedList<Integer> prevX = new LinkedList<>();
@@ -29,10 +30,13 @@ public class Head extends GameObject {
     private int numTicks;
     private boolean alive;
     private boolean invulnerable;
+    private int ticksSinceLastTurn;
+    private Heading pendingAction;
 
     public Head(int x, int y, Player player, Handler handler) {
         super(x, y, ID.Head);
         this.handler = handler;
+        this.size = 16;
         this.vel = 4;
         this.bodyNum = 0;
         this.alive = true;
@@ -46,31 +50,50 @@ public class Head extends GameObject {
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(x, y, 16, 16);
+        return new Rectangle(x, y, size, size);
     }
 
     public void tick() {
         prevX.add(x);
         prevY.add(y);
+        
+        if (!alive) {
+            prevX.remove();
+            prevY.remove();
+            return;
+        }
+        
+        if (prevX.size() > (bodyNum + 1) * (size/vel + 3)) {
+            prevX.remove();
+        }
+        if (prevY.size() > (bodyNum + 1) * (size/vel + 3)) {
+            prevY.remove();
+        }
+        
+        if (pendingAction != null && canTurn()) {
+            goDirection(pendingAction);
+        }
 
         x += velX;
         y += velY;
         
-        if (x > Game.WIDTH - 11) {
-            x = -11;
+        if (x > Game.WIDTH - size/2 - 16) {
+            x = -size/2;
         }
-        if (x < -11) {
-            x = Game.WIDTH - 11;
+        if (x < -size/2) {
+            x = Game.WIDTH - size/2 - 16;
         }
-        if (y > Game.HEIGHT - 43) {
-            y = -11;
+        if (y > Game.HEIGHT - size/2 - 39) {
+            y = -size/2;
         }
-        if (y < -11) {
-            y = Game.HEIGHT - 43;
+        if (y < -size/2) {
+            y = Game.HEIGHT - size/2 - 39;
         }
 
         collision();
         powerEffect(powerType);
+        
+        this.ticksSinceLastTurn++;
     }
     
     public void render(Graphics g) {
@@ -78,11 +101,107 @@ public class Head extends GameObject {
 
         if (vel == 0) {
             g.setFont(new Font("ARIEL", 0, 10));
-            g.drawRect(x, y, 16, 16);
+            g.drawRect(x, y, size, size);
         } else {
-            g.fillRect(x, y, 16, 16);
+            g.fillRect(x, y, size, size);
         }
 
+    }
+    
+    public void goDirection(Heading heading) {
+        switch (heading) {
+            case NORTH:
+                goUp();
+                break;
+            case SOUTH:
+                goDown();
+                break;
+            case WEST:
+                goLeft();
+                break;
+            case EAST:
+                goRight();
+                break;
+        }
+    }
+    
+    public void goUp() {
+        if (heading == Heading.SOUTH) {
+            return;
+        }
+        
+        if (pendingAction == Heading.NORTH || (pendingAction == null && canTurn())) {
+            heading = Heading.NORTH;
+            velY = -vel;
+            velX = 0;
+            ticksSinceLastTurn = 0;
+            pendingAction = null;
+            return;
+        }
+        
+        if (pendingAction == null && !canTurn() && heading != Heading.NORTH) {
+            pendingAction = Heading.NORTH;
+            return;
+        }
+    }
+    
+    public void goDown() {
+        if (heading == Heading.NORTH) {
+            return;
+        }
+        
+        if (pendingAction == Heading.SOUTH || (pendingAction == null && canTurn())) {
+            heading = Heading.SOUTH;
+            velY = vel;
+            velX = 0;
+            ticksSinceLastTurn = 0;
+            pendingAction = null;
+            return;
+        }
+        
+        if (pendingAction == null && !canTurn() && heading != Heading.SOUTH) {
+            pendingAction = Heading.SOUTH;
+        }
+    }
+    
+    public void goLeft() {
+        if (heading == Heading.EAST) {
+            return;
+        }
+        
+        if (pendingAction == Heading.WEST || (pendingAction == null && canTurn())) {
+            heading = Heading.WEST;
+            velX = -vel;
+            velY = 0;
+            ticksSinceLastTurn = 0;
+            pendingAction = null;
+            return;
+        }
+        
+        if (pendingAction == null && !canTurn() && heading != Heading.WEST) {
+            pendingAction = Heading.WEST;
+            return;
+        }
+    }
+    
+    public void goRight() {
+        if (heading == Heading.WEST) {
+            return;
+        }
+        
+        if (pendingAction == Heading.EAST || (pendingAction == null && canTurn())) {
+            heading = Heading.EAST;
+            velX = vel;
+            velY = 0;
+            ticksSinceLastTurn = 0;
+            pendingAction = null;
+            return;
+        }
+        
+        if (pendingAction == null && !canTurn() && heading != Heading.EAST) {
+            pendingAction = Heading.EAST;
+            return;
+        }
     }
 
     private void collision() {
@@ -201,6 +320,10 @@ public class Head extends GameObject {
     public void changeDirection(Heading heading) {
         this.heading = heading;
         changeDirection();
+    }
+    
+    private boolean canTurn() {
+        return ticksSinceLastTurn * vel >= size;
     }
     
     public void setHeading(Heading heading) {

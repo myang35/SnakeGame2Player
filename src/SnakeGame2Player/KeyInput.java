@@ -28,7 +28,6 @@ public class KeyInput extends KeyAdapter {
 
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
-        int sleepTime = 70;
 
         for (int i = 0; i < handler.object.size(); i++) {
             GameObject tempObject = handler.object.get(i);
@@ -37,32 +36,36 @@ public class KeyInput extends KeyAdapter {
                 Head headObject = (Head) tempObject;
                 // key events for player 1
                 if (headObject.getPlayer() == Player.BLUE) {
-                    if (key == KeyEvent.VK_W && headObject.getHeading() != Heading.SOUTH) {
-                        setPlayerDirection(headObject, Heading.NORTH);
-                    }
-                    if (key == KeyEvent.VK_S && headObject.getHeading() != Heading.NORTH) {
-                        setPlayerDirection(headObject, Heading.SOUTH);
-                    }
-                    if (key == KeyEvent.VK_A && headObject.getHeading() != Heading.EAST) {
-                        setPlayerDirection(headObject, Heading.WEST);
-                    }
-                    if (key == KeyEvent.VK_D && headObject.getHeading() != Heading.WEST) {
-                        setPlayerDirection(headObject, Heading.EAST);
+                    switch (key) {
+                        case KeyEvent.VK_W:
+                            headObject.goUp();
+                            break;
+                        case KeyEvent.VK_S:
+                            headObject.goDown();
+                            break;
+                        case KeyEvent.VK_A:
+                            headObject.goLeft();
+                            break;
+                        case KeyEvent.VK_D:
+                            headObject.goRight();
+                            break;
                     }
                 }
                 // key events for player 2
                 if (headObject.getPlayer() == Player.RED) {
-                    if (key == KeyEvent.VK_UP && headObject.getHeading() != Heading.SOUTH) {
-                        setPlayerDirection(headObject, Heading.NORTH);
-                    }
-                    if (key == KeyEvent.VK_DOWN && headObject.getHeading() != Heading.NORTH) {
-                        setPlayerDirection(headObject, Heading.SOUTH);
-                    }
-                    if (key == KeyEvent.VK_LEFT && headObject.getHeading() != Heading.EAST) {
-                        setPlayerDirection(headObject, Heading.WEST);
-                    }
-                    if (key == KeyEvent.VK_RIGHT && headObject.getHeading() != Heading.WEST) {
-                        setPlayerDirection(headObject, Heading.EAST);
+                    switch (key) {
+                        case KeyEvent.VK_UP:
+                            headObject.goUp();
+                            break;
+                        case KeyEvent.VK_DOWN:
+                            headObject.goDown();
+                            break;
+                        case KeyEvent.VK_LEFT:
+                            headObject.goLeft();
+                            break;
+                        case KeyEvent.VK_RIGHT:
+                            headObject.goRight();
+                            break;
                     }
                 }
             }
