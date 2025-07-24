@@ -38,16 +38,16 @@ public class KeyInput extends KeyAdapter {
                 if (headObject.getPlayer() == Player.BLUE) {
                     switch (key) {
                         case KeyEvent.VK_W:
-                            headObject.goUp();
+                            setPlayerDirection(headObject, Heading.NORTH);
                             break;
                         case KeyEvent.VK_S:
-                            headObject.goDown();
+                            setPlayerDirection(headObject, Heading.SOUTH);
                             break;
                         case KeyEvent.VK_A:
-                            headObject.goLeft();
+                            setPlayerDirection(headObject, Heading.WEST);
                             break;
                         case KeyEvent.VK_D:
-                            headObject.goRight();
+                            setPlayerDirection(headObject, Heading.EAST);
                             break;
                     }
                 }
@@ -55,16 +55,16 @@ public class KeyInput extends KeyAdapter {
                 if (headObject.getPlayer() == Player.RED) {
                     switch (key) {
                         case KeyEvent.VK_UP:
-                            headObject.goUp();
+                            setPlayerDirection(headObject, Heading.NORTH);
                             break;
                         case KeyEvent.VK_DOWN:
-                            headObject.goDown();
+                            setPlayerDirection(headObject, Heading.SOUTH);
                             break;
                         case KeyEvent.VK_LEFT:
-                            headObject.goLeft();
+                            setPlayerDirection(headObject, Heading.WEST);
                             break;
                         case KeyEvent.VK_RIGHT:
-                            headObject.goRight();
+                            setPlayerDirection(headObject, Heading.EAST);
                             break;
                     }
                 }

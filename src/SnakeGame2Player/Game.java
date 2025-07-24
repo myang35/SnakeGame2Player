@@ -83,7 +83,7 @@ public class Game extends Canvas implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                System.out.println("FPS: " + frames);
+//                System.out.println("FPS: " + frames);
                 frames = 0;
             }
         }
@@ -211,9 +211,11 @@ public class Game extends Canvas implements Runnable {
     }
     
     private void createPowerUp() {
+        System.out.println("gameState: " + gameState);
         if (gameState != GameState.PLAYING) {
             numTicks = 0;
         } else {
+            System.out.println("Create PowerUp");
             if (numTicks == 300) {
                 PowerUp powerUp;
                 int randNum = r.nextInt(2);
