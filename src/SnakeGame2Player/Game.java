@@ -127,40 +127,40 @@ public class Game extends Canvas implements Runnable {
         }
         
         // show timer for red player's powerUp
-        if (playerBlue.isPoweredUp()) {
-            int timer = 10 - playerBlue.getNumTicks() / 50;
-            
-            switch (playerBlue.getPowerType()) {
-                case SpeedPower:
-                    g.setColor(Color.RED);
-                    break;
-                case InvulnerablePower:
-                    g.setColor(Color.GREEN);
-                    break;
-                default:
-                    System.out.println("Error: invalid powerType");
-            }
-            g.setFont(new Font("ARIEL", 0, 25));
-            g.drawString(""+timer, 100, 25);
-        }
+//        if (playerBlue.isPoweredUp()) {
+//            int timer = 10 - playerBlue.getNumTicks() / 50;
+//            
+//            switch (playerBlue.getPowerType()) {
+//                case SpeedPower:
+//                    g.setColor(Color.RED);
+//                    break;
+//                case InvulnerablePower:
+//                    g.setColor(Color.GREEN);
+//                    break;
+//                default:
+//                    System.out.println("Error: invalid powerType");
+//            }
+//            g.setFont(new Font("ARIEL", 0, 25));
+//            g.drawString(""+timer, 100, 25);
+//        }
         
         // show timer for red player's powerUp
-        if (playerRed.isPoweredUp()) {
-            int timer = 10 - playerRed.getNumTicks() / 50;
-            
-            switch (playerRed.getPowerType()) {
-                case SpeedPower:
-                    g.setColor(Color.RED);
-                    break;
-                case InvulnerablePower:
-                    g.setColor(Color.GREEN);
-                    break;
-                default:
-                    System.out.println("Error: invalid powerType");
-            }
-            g.setFont(new Font("ARIEL", 0, 25));
-            g.drawString(""+timer, WIDTH - 125, 25);
-        }
+//        if (playerRed.isPoweredUp()) {
+//            int timer = 5 - playerRed.getNumTicks() / 50;
+//            
+//            switch (playerRed.getPowerType()) {
+//                case SpeedPower:
+//                    g.setColor(Color.RED);
+//                    break;
+//                case InvulnerablePower:
+//                    g.setColor(Color.GREEN);
+//                    break;
+//                default:
+//                    System.out.println("Error: invalid powerType");
+//            }
+//            g.setFont(new Font("ARIEL", 0, 25));
+//            g.drawString(""+timer, WIDTH - 125, 25);
+//        }
         
         // if only red player dies
         if (playerBlue.isAlive() && !playerRed.isAlive() || gameState == GameState.BLUEWIN) {
@@ -211,20 +211,21 @@ public class Game extends Canvas implements Runnable {
     }
     
     private void createPowerUp() {
-        System.out.println("gameState: " + gameState);
         if (gameState != GameState.PLAYING) {
             numTicks = 0;
         } else {
-            System.out.println("Create PowerUp");
             if (numTicks == 300) {
                 PowerUp powerUp;
-                int randNum = r.nextInt(2);
+                int randNum = r.nextInt(3);
                 switch (randNum) {
                     case 0:
                         powerUp = new SpeedPower(r.nextInt(WIDTH-22), r.nextInt(HEIGHT-54), handler);
                         break;
                     case 1:
                         powerUp = new InvulnerablePower(r.nextInt(WIDTH-22), r.nextInt(HEIGHT-54), handler);
+                        break;
+                    case 2:
+                        powerUp = new GrowPower(r.nextInt(WIDTH-22), r.nextInt(HEIGHT-54), handler);
                         break;
                     default:
                         System.out.println("Error: invalid random number (" + randNum + ")");

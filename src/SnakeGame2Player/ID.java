@@ -17,6 +17,7 @@ public enum ID {
     
     // PowerUps
     SpeedPower,
-    InvulnerablePower;
+    InvulnerablePower,
+    GrowPower
     
 }

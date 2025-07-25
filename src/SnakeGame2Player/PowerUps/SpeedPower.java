@@ -19,7 +19,7 @@ public class SpeedPower extends PowerUp {
     public SpeedPower(int x, int y, Handler handler) {
         super(x, y, ID.SpeedPower, handler);
         
-        color = Color.RED;
+        color = Color.ORANGE;
     }
     
 }

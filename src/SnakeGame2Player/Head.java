@@ -1,5 +1,7 @@
 package SnakeGame2Player;
 
+import static SnakeGame2Player.ID.InvulnerablePower;
+import static SnakeGame2Player.ID.SpeedPower;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -97,7 +99,28 @@ public class Head extends GameObject {
     }
     
     public void render(Graphics g) {
-        g.setColor(color);
+        if (null == powerType) {
+            g.setColor(color);
+        } else switch (powerType) {
+            case InvulnerablePower:
+                g.setColor(Color.GREEN);
+                break;
+            case SpeedPower:
+                g.setColor(Color.ORANGE);
+                break;
+            case GrowPower:
+                g.setColor(Color.MAGENTA);
+                break;
+            default:
+                g.setColor(color);
+                break;
+        }
+        
+        if (poweredUp) {
+            if (numTicks < 100 && numTicks % 20 < 5) {
+                g.setColor(color);
+            }
+        }
 
         if (vel == 0) {
             g.setFont(new Font("ARIEL", 0, 10));
@@ -212,13 +235,15 @@ public class Head extends GameObject {
             // create new body when head eats food
             if (tempObject.getId() == ID.Food) {
                 if (getBounds().intersects(tempObject.getBounds())) {
-                    bodyNum++;
-                    handler.addObject(new Body(prevX, prevY, bodyNum, player, handler));
+                    for (int j = 0; j < 10; j++) {
+                        bodyNum++;
+                        handler.addObject(new Body(prevX, prevY, bodyNum, player, handler));
+                    }
                 }
             }
 
             // stop moving when head hits body
-            if (tempObject.getId() == ID.Body) {
+            if (tempObject.getId() == ID.Body && !tempObject.color.equals(color)) {
                 if (getBounds().intersects(tempObject.getBounds()) && !invulnerable) {
                     velX = 0;
                     velY = 0;
@@ -231,7 +256,7 @@ public class Head extends GameObject {
                 if (getBounds().intersects(tempObject.getBounds())) {
                     powerType = ID.SpeedPower;
                     poweredUp = true;
-                    numTicks = 0;
+                    numTicks = 50 * 5;
                 }
             }
             
@@ -239,7 +264,15 @@ public class Head extends GameObject {
                 if (getBounds().intersects(tempObject.getBounds())) {
                     powerType = ID.InvulnerablePower;
                     poweredUp = true;
-                    numTicks = 0;
+                    numTicks = 50 * 5;
+                }
+            }
+            
+            if (tempObject.getId() == ID.GrowPower) {
+                if (getBounds().intersects(tempObject.getBounds())) {
+                    powerType = ID.GrowPower;
+                    poweredUp = true;
+                    numTicks = 50 * 5;
                 }
             }
         }
@@ -251,33 +284,44 @@ public class Head extends GameObject {
                 case SpeedPower:
                     // disable other power ups
                     disableInvulnerablePower();
+                    disableGrowPower();
                     
                     // implement power up
-                    if (heading == Heading.NORTH) velY = -6;
-                    if (heading == Heading.SOUTH) velY = 6;
-                    if (heading == Heading.EAST) velX = 6;
-                    if (heading == Heading.WEST) velX = -6;
                     vel = 6;
+                    if (heading == Heading.NORTH) velY = -vel;
+                    if (heading == Heading.SOUTH) velY = vel;
+                    if (heading == Heading.EAST) velX = vel;
+                    if (heading == Heading.WEST) velX = -vel;
                     break;
                 case InvulnerablePower:
                     // disable other power ups
                     disableSpeedPower();
+                    disableGrowPower();
                     
                     // implement power up
                     invulnerable = true;
+                    break;
+                case GrowPower:
+                    // disable other power ups
+                    disableSpeedPower();
+                    disableInvulnerablePower();
+                    
+                    // implement power up
+                    size = 16*2;
                     break;
                 default:
                     System.out.println("Error: invalid power ID");
             }
             
-            // disable power up after 500 ticks (approximately 10 seconds)
-            if (numTicks == 500) {
+            // disable power up after 250 ticks (approximately 5 seconds)
+            if (numTicks <= 0) {
                 disableSpeedPower();
                 disableInvulnerablePower();
+                disableGrowPower();
                 poweredUp = false;
-                numTicks = 0;
+                powerType = null;
             }
-            numTicks++;
+            numTicks--;
             
         }
     }
@@ -292,6 +336,10 @@ public class Head extends GameObject {
     
     private void disableInvulnerablePower() {
         invulnerable = false;
+    }
+    
+    private void disableGrowPower() {
+        size = 16;
     }
     
     public void changeDirection() {

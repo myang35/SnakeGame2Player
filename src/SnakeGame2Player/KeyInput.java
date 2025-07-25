@@ -38,16 +38,24 @@ public class KeyInput extends KeyAdapter {
                 if (headObject.getPlayer() == Player.BLUE) {
                     switch (key) {
                         case KeyEvent.VK_W:
-                            setPlayerDirection(headObject, Heading.NORTH);
+                            if (headObject.getHeading() != Heading.SOUTH) {
+                                setPlayerDirection(headObject, Heading.NORTH);
+                            }
                             break;
                         case KeyEvent.VK_S:
-                            setPlayerDirection(headObject, Heading.SOUTH);
+                            if (headObject.getHeading() != Heading.NORTH) {
+                                setPlayerDirection(headObject, Heading.SOUTH);
+                            }
                             break;
                         case KeyEvent.VK_A:
-                            setPlayerDirection(headObject, Heading.WEST);
+                            if (headObject.getHeading() != Heading.EAST) {
+                                setPlayerDirection(headObject, Heading.WEST);
+                            }
                             break;
                         case KeyEvent.VK_D:
-                            setPlayerDirection(headObject, Heading.EAST);
+                            if (headObject.getHeading() != Heading.WEST) {
+                                setPlayerDirection(headObject, Heading.EAST);
+                            }
                             break;
                     }
                 }
@@ -55,16 +63,24 @@ public class KeyInput extends KeyAdapter {
                 if (headObject.getPlayer() == Player.RED) {
                     switch (key) {
                         case KeyEvent.VK_UP:
-                            setPlayerDirection(headObject, Heading.NORTH);
+                            if (headObject.getHeading() != Heading.SOUTH) {
+                                setPlayerDirection(headObject, Heading.NORTH);
+                            }
                             break;
                         case KeyEvent.VK_DOWN:
-                            setPlayerDirection(headObject, Heading.SOUTH);
+                            if (headObject.getHeading() != Heading.NORTH) {
+                                setPlayerDirection(headObject, Heading.SOUTH);
+                            }
                             break;
                         case KeyEvent.VK_LEFT:
-                            setPlayerDirection(headObject, Heading.WEST);
+                            if (headObject.getHeading() != Heading.EAST) {
+                                setPlayerDirection(headObject, Heading.WEST);
+                            }
                             break;
                         case KeyEvent.VK_RIGHT:
-                            setPlayerDirection(headObject, Heading.EAST);
+                            if (headObject.getHeading() != Heading.WEST) {
+                                setPlayerDirection(headObject, Heading.EAST);
+                            }
                             break;
                     }
                 }

@@ -23,6 +23,7 @@ public class Body extends GameObject {
     private Player player;
     int bodyNum;
     private LinkedList<Integer> prevX, prevY;
+    private int size;
 
     public Body(LinkedList<Integer> prevX, LinkedList<Integer> prevY, int bodyNum, Player player, Handler handler) {
         super(prevX.get(prevX.size() - 7), prevY.get(prevY.size() - 7), ID.Body);
@@ -31,6 +32,7 @@ public class Body extends GameObject {
         this.player = player;
         this.prevX = prevX;
         this.prevY = prevY;
+        this.size = 16;
 
         if (player == Player.BLUE) {
             color = Color.BLUE;
@@ -40,12 +42,23 @@ public class Body extends GameObject {
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(x, y, 16, 16);
+        return new Rectangle(x, y, size, size);
     }
 
     public void tick() {
-        x = prevX.get(prevX.size() - 6 * bodyNum);
-        y = prevY.get(prevY.size() - 6 * bodyNum);
+        final int GROW_MULT = 2;
+        
+        if (hasGrowPower()) {
+            size = 16 * GROW_MULT;
+        } else {
+            size = 16;
+        }
+        
+        int xPos = prevX.size() - 6 * bodyNum * (hasGrowPower() ? GROW_MULT : 1);
+        x = xPos >= 0 ? prevX.get(xPos) : prevX.getFirst();
+        
+        int yPos = prevY.size() - 6 * bodyNum * (hasGrowPower() ? GROW_MULT : 1);
+        y = yPos >= 0 ? prevY.get(yPos) : prevY.getFirst();
     }
 
     public void render(Graphics g) {
@@ -54,10 +67,15 @@ public class Body extends GameObject {
 
         if (player == Player.BLUE && Game.playerBlue.getVelocity() == 0
                 || player == Player.RED && Game.playerRed.getVelocity() == 0) {
-            g.drawRect(x, y, 16, 16);
+            g.drawRect(x, y, size, size);
         } else {
-            g.fillRect(x, y, 16, 16);
+            g.fillRect(x, y, size, size);
         }
+    }
+    
+    private boolean hasGrowPower() {
+        return player == Player.BLUE && Game.playerBlue.getPowerType() == ID.GrowPower
+                || player == Player.RED && Game.playerRed.getPowerType() == ID.GrowPower;
     }
 
 }
